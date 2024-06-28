@@ -86,10 +86,16 @@
 
             try {
                 const response = await fetch(url);
-                const data = await response.json();
-                document.getElementById('response').value = JSON.stringify(data, null, 2);
+                const text = await response.text();
+                console.log('Response Text:', text);  // Log the raw response text
+                try {
+                    const data = JSON.parse(text);
+                    document.getElementById('response').value = JSON.stringify(data, null, 2);
+                } catch (jsonError) {
+                    document.getElementById('response').value = 'Error parsing JSON: ' + jsonError + '\nResponse Text: ' + text;
+                }
             } catch (error) {
-                document.getElementById('response').value = 'Error: ' + error;
+                document.getElementById('response').value = 'Network error: ' + error;
             }
         }
     </script>
