@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GREEN-API Integration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .field {
+            margin-bottom: 15px;
+        }
+        .field label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .field input, .field textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .field textarea {
+            resize: vertical;
+        }
+        .actions {
+            margin-top: 20px;
+            text-align: right;
+        }
+        .actions button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .actions button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>GREEN-API Integration</h1>
+        <div class="field">
+            <label for="idInstance">Instance ID</label>
+            <input type="text" id="idInstance" placeholder="Enter Instance ID">
+        </div>
+        <div class="field">
+            <label for="apiToken">API Token</label>
+            <input type="text" id="apiToken" placeholder="Enter API Token">
+        </div>
+        <div class="actions">
+            <button onclick="callApi('getSettings')">Get Settings</button>
+            <button onclick="callApi('getStateInstance')">Get State</button>
+            <button onclick="callApi('sendMessage')">Send Message</button>
+            <button onclick="callApi('sendFileByUrl')">Send File by URL</button>
+        </div>
+        <div class="field">
+            <label for="response">Response</label>
+            <textarea id="response" readonly rows="24" placeholder="API response will be displayed here"></textarea>
+        </div>
+    </div>
+
+    <script>
+        async function callApi(endpoint) {
+            const idInstance = document.getElementById('idInstance').value;
+            const apiToken = document.getElementById('apiToken').value;
+            let url = `/${endpoint}?idInstance=${idInstance}&apiToken=${apiToken}`;
+
+            if (endpoint === 'sendMessage') {
+                url += `&chatId=phoneNumber@c.us&message=Hello from GREEN-API`; // Update with actual phone number
+            }
+
+            if (endpoint === 'sendFileByUrl') {
+                url += `&chatId=phoneNumber@c.us&urlFile=http://example.com/file.pdf&fileName=file.pdf`; // Update with actual phone number
+            }
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                document.getElementById('response').value = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('response').value = 'Error: ' + error;
+            }
+        }
+    </script>
+</body>
+</html>
